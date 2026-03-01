@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AS Level OOP Interactive Workbook</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    background-color: #f4f6f9;
+}
+
+.slide {
+    background: white;
+    padding: 25px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+h1 { color: #2c3e50; }
+h2 { color: #34495e; }
+
+button {
+    padding: 8px 15px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+}
+
+.correct { color: green; font-weight: bold; }
+.incorrect { color: red; font-weight: bold; }
+
+.highlight {
+    background: #fff3cd;
+    padding: 5px;
+    border-radius: 5px;
+}
+</style>
+
+<script>
+function checkAnswer(id, correctAnswer) {
+    const userAnswer = document.getElementById(id).value.trim().toLowerCase();
+    const feedback = document.getElementById(id + "_feedback");
+
+    if (userAnswer === correctAnswer) {
+        feedback.innerHTML = "Correct!";
+        feedback.className = "correct";
+    } else {
+        feedback.innerHTML = "Not quite — think about the metaphor again.";
+        feedback.className = "incorrect";
+    }
+}
+</script>
+</head>
+
+<body>
+
+<h1>AS Level OOP Interactive Workbook</h1>
+
+<div class="slide">
+<h2>1️⃣ OOP = Blueprints + Characters</h2>
+<p>A <span class="highlight">class</span> is a blueprint.</p>
+<p>An <span class="highlight">object</span> is something built from the blueprint.</p>
+<p>Attributes = what it has. Methods = what it can do.</p>
+
+<h3>Mini Check</h3>
+<p>What is an object?</p>
+<input type="text" id="q1">
+<button onclick="checkAnswer('q1','instance')">Check</button>
+<p id="q1_feedback"></p>
+<p><small>(Hint: It is an instance of a class)</small></p>
+</div>
+
+<div class="slide">
+<h2>2️⃣ Encapsulation = Locked Backpack 🎒</h2>
+<p>Data is kept private.</p>
+<p>Other code must use methods to access it.</p>
+
+<h3>Mini Check</h3>
+<p>Why make attributes private?</p>
+<input type="text" id="q2">
+<button onclick="checkAnswer('q2','protect data')">Check</button>
+<p id="q2_feedback"></p>
+</div>
+
+<div class="slide">
+<h2>3️⃣ Inheritance = Character DNA 🧬</h2>
+<p>A subclass inherits attributes and methods from a superclass.</p>
+
+<h3>Mini Check</h3>
+<p>What keyword is often used to show inheritance?</p>
+<input type="text" id="q3">
+<button onclick="checkAnswer('q3','extends')">Check</button>
+<p id="q3_feedback"></p>
+</div>
+
+<div class="slide">
+<h2>4️⃣ Polymorphism = Same Button, Different Power 🔘</h2>
+<p>Same method name.</p>
+<p>Different behaviour depending on object.</p>
+
+<h3>Mini Check</h3>
+<p>What does polymorphism allow?</p>
+<input type="text" id="q4">
+<button onclick="checkAnswer('q4','different behaviour')">Check</button>
+<p id="q4_feedback"></p>
+</div>
+
+<div class="slide">
+<h2>5️⃣ Exam Style Question</h2>
+<p>Describe one benefit of object-oriented programming.</p>
+
+<textarea id="q5" rows="4" cols="50"></textarea>
+<br>
+<button onclick="document.getElementById('model').style.display='block'">Show Model Answer</button>
+
+<div id="model" style="display:none;">
+<p><strong>Model:</strong></p>
+<p>OOP improves maintainability because data and behaviour are encapsulated within objects, reducing unintended modification of data.</p>
+</div>
+</div>
+
+</body>
+</html>
