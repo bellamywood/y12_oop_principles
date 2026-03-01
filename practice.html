@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OOP in Python — Deck of Cards Lab (AS OCR)</title>
+
+  <!-- Pyodide: recommended CDN indexURL is jsDelivr full build -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.29.3/full/pyodide.js"></script>
+  <!-- Pyodide CDN guidance -->
+  <!-- https://pyodide.org/en/stable/usage/downloading-and-deploying.html -->
+  <!-- https://pyodide.org/en/stable/usage/quickstart.html -->
+
+  <style>
+    body{font-family:Arial,sans-serif;background:#f7f7f7;margin:28px;line-height:1.5;color:#1f2a33}
+    h1{margin:0 0 6px 0;color:#22313f}
+    .sub{margin:0 0 18px 0;color:#566573}
+    .wrap{display:grid;gap:16px}
+    @media(min-width:1100px){.wrap{grid-template-columns:1.2fr 0.8fr}}
+    .panel{background:#fff;border-radius:12px;box-shadow:0 3px 8px rgba(0,0,0,0.08);padding:16px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    button{padding:8px 12px;border-radius:10px;border:none;background:#2563eb;color:#fff;cursor:pointer}
+    button.secondary{background:#4b5563}
+    button.ghost{background:#e5e7eb;color:#111827}
+    .status{font-size:13px;color:#475569}
+    textarea{
+      width:100%;min-height:520px;resize:vertical;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      font-size:13px;background:#0f172a;color:#e5e7eb;border:1px solid #111827;border-radius:12px;padding:12px;
+    }
+    .mini{font-size:13px;color:#475569}
+    .callout{background:#fff8e6;border-left:4px solid #f5c04d;padding:10px 12px;border-radius:8px;margin:10px 0}
+    .callout strong{color:#6b4f00}
+    .kbd{font-family:ui-monospace,monospace;background:#eef2ff;border:1px solid #c7d2fe;border-radius:6px;padding:1px 6px}
+    pre{
+      background:#0b1220;color:#e5e7eb;border-radius:12px;padding:12px;overflow:auto;border:1px solid #111827;
+      margin:10px 0 0 0;min-height:160px;
+    }
+    .cards{
+      display:flex;flex-wrap:wrap;gap:10px;margin-top:10px
+    }
+    .card{
+      width:92px;height:128px;border-radius:14px;
+      border:1px solid #d1d5db;background:#ffffff;
+      box-shadow:0 2px 6px rgba(0,0,0,0.08);
+      padding:8px;position:relative;
+      display:flex;flex-direction:column;justify-content:space-between;
+    }
+    .corner{font-weight:bold;font-size:16px}
+    .mid{font-size:34px;text-align:center;line-height:1}
+    .foot{font-size:11px;color:#64748b}
+    .red{color:#b91c1c}
+    .black{color:#111827}
+    .pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#eef6ff;border:1px solid #cfe6ff;color:#1f5faa;font-size:12px}
+    details{margin-top:10px}
+    summary{cursor:pointer}
+    .checklist label{display:block;margin:6px 0}
+  </style>
+</head>
+
+<body>
+  <h1>OOP in Python — Deck of Cards Lab</h1>
+  <p class="sub">Write Python in the box, press <span class="kbd">Run</span>, and see a visual hand of cards + console output. Demonstrates: class, encapsulation, inheritance, polymorphism.</p>
+
+  <div class="callout">
+    <strong>Teacher note (what this page teaches):</strong>
+    Students build a <span class="pill">Card</span> base class (blueprint), lock its data (encapsulation),
+    extend it into specialised cards (inheritance), and call the same method on different card objects (polymorphism).
+  </div>
+
+  <div class="wrap">
+    <!-- Left: Editor -->
+    <div class="panel">
+      <div class="row">
+        <button id="runBtn" onclick="runCode()">Run</button>
+        <button class="secondary" onclick="loadStarter()">Load starter</button>
+        <button class="ghost" onclick="loadSolution()">Load worked example</button>
+        <span class="status" id="status">Loading Python runtime…</span>
+      </div>
+
+      <textarea id="code"></textarea>
+
+      <details>
+        <summary><strong>Checks for understanding</strong> (quick self-check)</summary>
+        <div class="checklist mini">
+          <label><input type="checkbox"> I can explain “class vs object” using the deck example.</label>
+          <label><input type="checkbox"> I can point to what is “encapsulated” and how it’s accessed.</label>
+          <label><input type="checkbox"> I can identify which classes inherit from which.</label>
+          <label><input type="checkbox"> I can explain why calling <code>describe()</code> shows polymorphism.</label>
+        </div>
+      </details>
+    </div>
+
+    <!-- Right: Output + visual -->
+    <div class="panel">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">Output</h2>
+        <span class="mini">Tip: edit the code, then run again.</span>
+      </div>
+
+      <h3 style="margin:10px 0 6px 0">Console</h3>
+      <pre id="console"></pre>
+
+      <h3 style="margin:14px 0 6px 0">Visual hand</h3>
+      <div class="mini">Your Python should call <code>render_hand([...])</code> with a list of card dictionaries.</div>
+      <div id="cards" class="cards"></div>
+
+      <details>
+        <summary><strong>What “counts” as each concept here?</strong></summary>
+        <ul class="mini">
+          <li><strong>Class</strong>: <code>class Card:</code> defines attributes + methods (blueprint).</li>
+          <li><strong>Encapsulation</strong>: attributes stored as <code>_rank</code> and <code>_suit</code>, accessed via <code>@property</code> not directly.</li>
+          <li><strong>Inheritance</strong>: <code>NumberCard(Card)</code>, <code>FaceCard(Card)</code>, <code>Joker(Card)</code>.</li>
+          <li><strong>Polymorphism</strong>: calling <code>describe()</code> on different card objects gives different outputs.</li>
+        </ul>
+      </details>
+    </div>
+  </div>
+
+<script>
+  // ---------- Visual rendering (called from Python) ----------
+  const SUIT_SYMBOL = { "Spades":"♠", "Hearts":"♥", "Diamonds":"♦", "Clubs":"♣", "Joker":"🃏" };
+  const SUIT_COLOR = { "Spades":"black", "Clubs":"black", "Hearts":"red", "Diamonds":"red", "Joker":"black" };
+
+  // Python will call: js.render_hand(list_of_dicts)
+  function render_hand(cards){
+    const root = document.getElementById("cards");
+    root.innerHTML = "";
+    for(const c of cards){
+      const div = document.createElement("div");
+      div.className = "card";
+      const colorClass = (SUIT_COLOR[c.suit] === "red") ? "red" : "black";
+      const sym = SUIT_SYMBOL[c.suit] || "□";
+      div.innerHTML = `
+        <div class="corner ${colorClass}">${c.rank}${sym}</div>
+        <div class="mid ${colorClass}">${sym}</div>
+        <div class="foot">
+          <div><strong>Type:</strong> ${c.kind}</div>
+          <div><strong>Describe:</strong> ${escapeHtml(c.describe)}</div>
+        </div>
+      `;
+      root.appendChild(div);
+    }
+  }
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  // ---------- Pyodide setup ----------
+  let pyodide = null;
+
+  async function initPyodide(){
+    try{
+      // indexURL recommended for a fixed version full build
+      pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.29.3/full/" });
+      // Expose JS render function to Python via js module
+      pyodide.globals.set("render_hand", render_hand);
+
+      document.getElementById("status").textContent = "Python ready ✅";
+      loadStarter();
+    }catch(err){
+      document.getElementById("status").textContent = "Failed to load Python runtime.";
+      document.getElementById("console").textContent = String(err);
+    }
+  }
+
+  function setConsole(text){
+    document.getElementById("console").textContent = text;
+  }
+
+  async function runCode(){
+    if(!pyodide){
+      setConsole("Python is still loading…");
+      return;
+    }
+    const code = document.getElementById("code").value;
+    setConsole("Running…\n");
+
+    try{
+      // Capture stdout/stderr by patching sys.stdout in Python
+      const wrapped = `
+import sys, io
+_stdout = io.StringIO()
+_stderr = io.StringIO()
+_oldout, _olderr = sys.stdout, sys.stderr
+sys.stdout, sys.stderr = _stdout, _stderr
+
+try:
+${indent(code, 4)}
+finally:
+    sys.stdout, sys.stderr = _oldout, _olderr
+
+_stdout.getvalue(), _stderr.getvalue()
+`;
+      const result = await pyodide.runPythonAsync(wrapped);
+      const out = result.get(0);
+      const err = result.get(1);
+      let combined = "";
+      if(out) combined += out;
+      if(err) combined += (combined ? "\n" : "") + err;
+      setConsole(combined || "(no console output)");
+    }catch(e){
+      setConsole(String(e));
+    }
+  }
+
+  function indent(text, spaces){
+    const pad = " ".repeat(spaces);
+    return text.split("\n").map(line => pad + line).join("\n");
+  }
+
+  // ---------- Starter + Solution ----------
+  function loadStarter(){
+    document.getElementById("code").value = STARTER_CODE;
+    document.getElementById("cards").innerHTML = "";
+    setConsole("Starter loaded. Task: fill the TODOs, then Run.\n");
+  }
+
+  function loadSolution(){
+    document.getElementById("code").value = SOLUTION_CODE;
+    document.getElementById("cards").innerHTML = "";
+    setConsole("Worked example loaded. Press Run.\n");
+  }
+
+  const STARTER_CODE = `# OOP Deck of Cards Lab (Starter)
+# Aim: You will implement:
+# 1) A class (Card) + objects
+# 2) Encapsulation (use _rank, _suit with @property)
+# 3) Inheritance (NumberCard / FaceCard / Joker)
+# 4) Polymorphism (describe() overridden in subclasses)
+#
+# Visual output: at the end, call render_hand([...]) with list of dicts.
+
+# --- Task 1: Base class ---
+class Card:
+    def __init__(self, rank, suit):
+        # TODO (Encapsulation): store in "private-ish" attributes:
+        # self._rank = ...
+        # self._suit = ...
+        pass
+
+    # TODO: create @property getters rank and suit
+    # @property
+    # def rank(self): return ...
+    #
+    # @property
+    # def suit(self): return ...
+
+    def kind(self):
+        return "Card"
+
+    def describe(self):
+        # Polymorphic method (subclasses will override)
+        return f"A {self.rank} of {self.suit}"
+
+    def to_dict(self):
+        return {
+            "rank": self.rank,
+            "suit": self.suit,
+            "kind": self.kind(),
+            "describe": self.describe(),
+        }
+
+# --- Task 2: Inheritance ---
+class NumberCard(Card):
+    def kind(self):
+        return "NumberCard"
+    # TODO: override describe() so it says something like:
+    # "Number card: 7 (Hearts) worth 7"
+    # (use int(self.rank) for value)
+
+class FaceCard(Card):
+    def kind(self):
+        return "FaceCard"
+    # TODO: override describe() so it says:
+    # "Face card: K of Spades worth 10"
+
+class Joker(Card):
+    def __init__(self):
+        # TODO: call super().__init__(..., ...)
+        pass
+    def kind(self):
+        return "Joker"
+    # TODO: override describe() so it says:
+    # "Joker! Wild card worth 0"
+
+# --- Task 3: Make objects + demonstrate polymorphism ---
+# Create a mixed 'hand' containing different types of cards
+hand = [
+    # TODO: NumberCard("7", "Hearts"),
+    # TODO: FaceCard("K", "Spades"),
+    # TODO: Joker(),
+]
+
+# Print polymorphism: same method call, different behaviour
+for c in hand:
+    print(c.describe())
+
+# Visual: send data to the page
+render_hand([c.to_dict() for c in hand])
+`;
+
+  const SOLUTION_CODE = `# OOP Deck of Cards Lab (Worked Example)
+# This is deliberately explicit so students can point to each concept.
+
+# 1) CLASS + OBJECTS: Card is a blueprint; instances are objects.
+# 2) ENCAPSULATION: _rank and _suit are not intended for direct access;
+#    use properties (rank, suit) as controlled access.
+# 3) INHERITANCE: NumberCard / FaceCard / Joker reuse Card and extend/override.
+# 4) POLYMORPHISM: calling describe() on different subclasses gives different behaviour.
+
+class Card:
+    def __init__(self, rank, suit):
+        # Encapsulation: "private-ish" attributes
+        self._rank = rank
+        self._suit = suit
+
+    @property
+    def rank(self):
+        return self._rank
+
+    @property
+    def suit(self):
+        return self._suit
+
+    def kind(self):
+        return "Card"
+
+    def describe(self):
+        # Base behaviour
+        return f"A {self.rank} of {self.suit}"
+
+    def to_dict(self):
+        return {
+            "rank": self.rank,
+            "suit": self.suit,
+            "kind": self.kind(),
+            "describe": self.describe(),
+        }
+
+class NumberCard(Card):
+    def kind(self):
+        return "NumberCard"
+
+    def value(self):
+        return int(self.rank)
+
+    def describe(self):
+        # Polymorphism: overridden behaviour
+        return f"Number card: {self.rank} of {self.suit} worth {self.value()}"
+
+class FaceCard(Card):
+    def kind(self):
+        return "FaceCard"
+
+    def value(self):
+        return 10
+
+    def describe(self):
+        return f"Face card: {self.rank} of {self.suit} worth {self.value()}"
+
+class Joker(Card):
+    def __init__(self):
+        # Inheritance: reuse Card constructor
+        super().__init__("J", "Joker")
+
+    def kind(self):
+        return "Joker"
+
+    def value(self):
+        return 0
+
+    def describe(self):
+        return "Joker! Wild card worth 0"
+
+# Objects (instances)
+hand = [
+    NumberCard("7", "Hearts"),
+    FaceCard("K", "Spades"),
+    NumberCard("2", "Clubs"),
+    Joker(),
+    FaceCard("A", "Diamonds"),
+]
+
+# Polymorphism: same method name; different output depending on object type
+print("Polymorphism demo: calling describe() on mixed card objects")
+for c in hand:
+    print("-", c.describe())
+
+# Visual output
+render_hand([c.to_dict() for c in hand])
+`;
+
+  initPyodide();
+</script>
+
+</body>
+</html>
