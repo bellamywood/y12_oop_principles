@@ -1,643 +1,314 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AS OCR OOP Workbook (Metaphor + Exam Practice + Self-Marking)</title>
+<meta charset="UTF-8">
+<title>AS OOP Python Coding Lab (Fully Commented)</title>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.29.3/full/pyodide.js"></script>
 
 <style>
-  body{
-    font-family: Arial, sans-serif;
-    background:#f7f7f7;
-    margin:32px;
-    line-height:1.6;
-    color:#1f2a33;
-  }
-  h1{color:#22313f;margin-bottom:6px}
-  .sub{color:#566573;margin-top:0;margin-bottom:22px}
-  .section{
-    background:#fff;
-    padding:22px;
-    border-radius:10px;
-    box-shadow:0 3px 8px rgba(0,0,0,0.08);
-    margin-bottom:24px;
-  }
-  h2{color:#2c3e50;margin-top:0}
-  h3{margin-bottom:6px}
-  .tag{
-    display:inline-block;
-    padding:2px 8px;
-    border-radius:999px;
-    background:#eef6ff;
-    border:1px solid #cfe6ff;
-    color:#1f5faa;
-    font-size:12px;
-    margin-left:8px;
-    vertical-align:middle;
-  }
-  .metaphor{
-    background:#fff8e6;
-    border-left:4px solid #f5c04d;
-    padding:10px 12px;
-    border-radius:6px;
-    margin:10px 0 14px 0;
-  }
-  .formal{
-    background:#eef6ff;
-    border-left:4px solid #3498db;
-    padding:10px 12px;
-    border-radius:6px;
-    margin:10px 0 14px 0;
-  }
-  .industry{
-    background:#f1f8f4;
-    border-left:4px solid #2ecc71;
-    padding:10px 12px;
-    border-radius:6px;
-    margin:10px 0 14px 0;
-  }
-  .code{
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    background:#0f172a;
-    color:#e5e7eb;
-    padding:12px;
-    border-radius:8px;
-    overflow:auto;
-    font-size:13px;
-  }
-  .question{
-    border:1px solid #e6e6e6;
-    border-radius:10px;
-    padding:14px;
-    margin-top:14px;
-    background:#fcfcfc;
-  }
-  .marks{
-    float:right;
-    color:#6b7280;
-    font-size:13px;
-  }
-  textarea{
-    width:100%;
-    margin-top:10px;
-    padding:10px;
-    border-radius:8px;
-    border:1px solid #d7dde3;
-    font-size:14px;
-    min-height:90px;
-  }
-  .hint{
-    font-size:13px;
-    color:#4b5563;
-    margin-top:10px;
-  }
-  .model{
-    display:none;
-    background:#eef6ff;
-    border-left:4px solid #3498db;
-    padding:10px 12px;
-    border-radius:6px;
-    margin-top:10px;
-  }
-  button{
-    margin-top:10px;
-    padding:8px 12px;
-    border-radius:8px;
-    border:none;
-    background:#2563eb;
-    color:white;
-    cursor:pointer;
-  }
-  button.secondary{
-    background:#4b5563;
-  }
-  .mcq label{display:block;margin:6px 0}
-  .feedback{
-    margin-top:8px;
-    font-weight:bold;
-  }
-  .correct{color:#166534}
-  .incorrect{color:#b91c1c}
-  .grid{
-    display:grid;
-    gap:14px;
-  }
-  @media(min-width:900px){
-    .grid.two{grid-template-columns:1fr 1fr}
-  }
-
-  /* Self-marking */
-  .selfmark{
-    margin-top:12px;
-    padding:12px;
-    border-radius:10px;
-    border:1px dashed #cbd5e1;
-    background:#f8fafc;
-  }
-  .selfmark h4{
-    margin:0 0 8px 0;
-    color:#334155;
-  }
-  .selfmark label{
-    display:block;
-    margin:6px 0;
-    font-size:14px;
-  }
-  .scorebox{
-    margin-top:10px;
-    padding:10px;
-    border-radius:8px;
-    background:#fff;
-    border:1px solid #e5e7eb;
-  }
-  .upgrade{
-    color:#475569;
-    font-size:13px;
-    margin-top:6px;
-  }
-  .pill{
-    display:inline-block;
-    padding:2px 8px;
-    border-radius:999px;
-    border:1px solid #e5e7eb;
-    background:#ffffff;
-    font-size:12px;
-    color:#475569;
-    margin-left:8px;
-  }
+body{
+  font-family:Arial,sans-serif;
+  background:#f7f7f7;
+  margin:30px;
+  line-height:1.5;
+}
+h1{margin-bottom:6px}
+.section{
+  background:white;
+  padding:18px;
+  margin-bottom:25px;
+  border-radius:10px;
+  box-shadow:0 3px 8px rgba(0,0,0,0.08);
+}
+textarea{
+  width:100%;
+  min-height:220px;
+  font-family:monospace;
+  background:#0f172a;
+  color:#e5e7eb;
+  padding:10px;
+  border-radius:8px;
+}
+button{
+  margin-top:8px;
+  padding:6px 12px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+}
+.output{
+  background:#0b1220;
+  color:#e5e7eb;
+  padding:8px;
+  margin-top:8px;
+  border-radius:8px;
+  min-height:60px;
+}
+.split{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+.model{
+  background:#111827;
+  color:#e5e7eb;
+  padding:10px;
+  border-radius:8px;
+  font-family:monospace;
+  white-space:pre-wrap;
+}
 </style>
-
-<script>
-  function toggle(id){
-    const el = document.getElementById(id);
-    el.style.display = (el.style.display === "block") ? "none" : "block";
-  }
-
-  function checkMCQ(name, correctValue, feedbackId){
-    const selected = document.querySelector('input[name="'+name+'"]:checked');
-    const fb = document.getElementById(feedbackId);
-    if(!selected){
-      fb.textContent = "Select an option first.";
-      fb.className = "feedback incorrect";
-      return;
-    }
-    if(selected.value === correctValue){
-      fb.textContent = "Correct — this matches OCR wording/idea.";
-      fb.className = "feedback correct";
-    } else {
-      fb.textContent = "Not quite — re-read the definition and think about what the code/diagram shows.";
-      fb.className = "feedback incorrect";
-    }
-  }
-
-  // Self-marking scoring
-  function scoreChecklist(groupName, totalMarks, scoreId, upgradeId, upgradeTextMissingMap){
-    const checks = document.querySelectorAll('input[name="'+groupName+'"]:checked');
-    const score = checks.length;
-    const scoreEl = document.getElementById(scoreId);
-    const upgradeEl = document.getElementById(upgradeId);
-
-    // Determine missing items
-    const all = document.querySelectorAll('input[name="'+groupName+'"]');
-    let missingHints = [];
-    all.forEach(cb => {
-      if(!cb.checked){
-        const key = cb.getAttribute("data-key");
-        if(upgradeTextMissingMap[key]) missingHints.push("• " + upgradeTextMissingMap[key]);
-      }
-    });
-
-    scoreEl.innerHTML = `<strong>Self-mark score:</strong> ${score}/${totalMarks} marks`;
-    if(score === totalMarks){
-      upgradeEl.innerHTML = "Nice — you’ve hit all marking points. Now tighten phrasing and reference the scenario.";
-    } else {
-      upgradeEl.innerHTML = `<strong>Upgrade to full marks:</strong><br>${missingHints.join("<br>") || "Add one more specific marking point."}`;
-    }
-  }
-
-  function clearChecklist(groupName, scoreId, upgradeId){
-    document.querySelectorAll('input[name="'+groupName+'"]').forEach(cb => cb.checked = false);
-    document.getElementById(scoreId).innerHTML = "";
-    document.getElementById(upgradeId).innerHTML = "";
-  }
-</script>
 </head>
 
 <body>
-  <h1>AS OCR OOP Workbook</h1>
-  <p class="sub">Metaphor → formal definition → OCR question types → model answers → self-marking checklists.</p>
-
-  <!-- 0: Clear intro + industry importance -->
-  <div class="section">
-    <h2>0) What is OOP and why does industry use it? <span class="tag">Start Here</span></h2>
-
-    <div class="metaphor">
-      <strong>Metaphor:</strong> Building a game by writing one giant list of instructions is like building a city with no street names.
-      OOP adds structure: you create <strong>blueprints</strong> (classes) and build <strong>things</strong> (objects) that know their own data and behaviour.
-    </div>
-
-    <div class="formal">
-      <strong>What OOP is (OCR-friendly):</strong><br>
-      Object-oriented programming is a paradigm where a program is structured using <strong>classes</strong> and <strong>objects</strong>.
-      Each object bundles <strong>data</strong> (attributes) and <strong>behaviour</strong> (methods).
-    </div>
-
-    <div class="industry">
-      <strong>Why industry cares (practical reasons):</strong>
-      <ul>
-        <li><strong>Maintainability:</strong> real software changes constantly. OOP helps teams change one part without breaking everything else.</li>
-        <li><strong>Reusability:</strong> common features can be reused across multiple parts of a system (reduces duplicated code).</li>
-        <li><strong>Teamwork at scale:</strong> developers can work on separate classes/modules with clearer boundaries.</li>
-        <li><strong>Modelling real systems:</strong> many domains map naturally to objects (users, accounts, orders, characters, prizes).</li>
-      </ul>
-      <div class="hint">OCR translation: industry uses OOP because it improves <strong>maintainability</strong>, <strong>reduces duplication</strong>, and supports <strong>complex systems</strong>.</div>
-    </div>
-
-    <div class="question">
-      <span class="marks">[1]</span>
-      <p><strong>Mini-check:</strong> Which is the best description of OOP?</p>
-      <div class="mcq">
-        <label><input type="radio" name="q0" value="a"> A way to store data using only arrays.</label>
-        <label><input type="radio" name="q0" value="b"> A paradigm using classes/objects that combine data and methods.</label>
-        <label><input type="radio" name="q0" value="c"> A programming style that avoids methods.</label>
-      </div>
-      <button onclick="checkMCQ('q0','b','f0')">Check</button>
-      <div id="f0" class="feedback"></div>
-    </div>
-  </div>
-
-  <!-- 1: Core OOP -->
-  <div class="section">
-    <h2>1) OOP = Blueprints + Game Characters <span class="tag">Concept</span></h2>
-
-    <div class="metaphor">
-      <strong>Game Factory:</strong> A <strong>class</strong> is a blueprint. An <strong>object</strong> is a character built from the blueprint.
-      <br/>Attributes = what it <em>has</em>. Methods = what it <em>can do</em>.
-    </div>
-
-    <div class="formal">
-      <strong>Quick definitions:</strong><br>
-      <strong>Class:</strong> defines attributes/methods. <strong>Object:</strong> an instance created from a class.
-    </div>
-
-    <div class="question">
-      <span class="marks">[1]</span>
-      <p><strong>Mini-check:</strong> Which statement is correct?</p>
-      <div class="mcq">
-        <label><input type="radio" name="q1" value="a"> A class is a single variable used across a program.</label>
-        <label><input type="radio" name="q1" value="b"> An object is an instance created from a class.</label>
-        <label><input type="radio" name="q1" value="c"> A method is the same thing as an attribute.</label>
-      </div>
-      <button onclick="checkMCQ('q1','b','f1')">Check</button>
-      <div id="f1" class="feedback"></div>
-    </div>
-  </div>
-
-  <!-- 2: Encapsulation -->
-  <div class="section">
-    <h2>2) Encapsulation = Locked Backpack <span class="tag">Concept</span></h2>
-
-    <div class="metaphor">
-      <strong>Locked backpack:</strong> The character’s money/XP is inside a backpack. Other code can’t grab it directly.
-      It must use a zip/slot like <code>getMoney()</code>.
-    </div>
-
-    <div class="formal">
-      <strong>OCR-friendly definition:</strong> Encapsulation restricts direct access to attributes by declaring them <strong>private</strong> and providing controlled access through <strong>methods</strong>.
-    </div>
-
-    <div class="question">
-      <span class="marks">[2]</span>
-      <p><strong>OCR-style:</strong> “Describe an object-oriented technique being used.” The class diagram shows <code>private</code> attributes and <code>get...</code> methods.</p>
-      <textarea placeholder="Write 2–3 sentences. Use the words: private, access, methods."></textarea>
-      <button class="secondary" onclick="toggle('m2')">Show model answer</button>
-      <div id="m2" class="model">
-        Encapsulation is being used because the attributes are declared as <strong>private</strong>.  
-        The data is accessed in a controlled way using <strong>methods</strong> such as get methods rather than direct access to the attributes.
-      </div>
-    </div>
-  </div>
-
-  <!-- 3: Inheritance -->
-  <div class="section">
-    <h2>3) Inheritance = Character DNA <span class="tag">Concept</span></h2>
-
-    <div class="metaphor">
-      <strong>DNA:</strong> A base blueprint (Character) passes shared features to new blueprints (Wizard/Warrior).
-      They reuse what’s shared, then add what’s unique.
-    </div>
-
-    <div class="formal">
-      <strong>OCR-friendly definition:</strong> Inheritance allows a <strong>subclass</strong> to derive attributes/methods from a <strong>superclass</strong>, improving code reuse and reducing duplication.
-    </div>
-
-    <div class="question">
-      <span class="marks">[2]</span>
-      <p><strong>OCR-style:</strong> Explain how inheritance could be used in a game with classes <em>Character</em>, <em>Player</em>, and <em>Enemy</em>.</p>
-      <textarea placeholder="Aim: 2 sentences. Sentence 1: what is inherited. Sentence 2: why it's helpful."></textarea>
-      <button class="secondary" onclick="toggle('m3')">Show model answer</button>
-      <div id="m3" class="model">
-        Player and Enemy could be subclasses of Character and inherit shared attributes and methods such as name, position and move().  
-        This reduces duplicated code and makes the program easier to maintain because shared changes are made once in Character.
-      </div>
-    </div>
-  </div>
-
-  <!-- 4: Polymorphism -->
-  <div class="section">
-    <h2>4) Polymorphism = Same Button, Different Result <span class="tag">Concept</span></h2>
-
-    <div class="metaphor">
-      <strong>Same button:</strong> You press “attack” for every character, but each character attacks differently.
-      Same message, different result.
-    </div>
-
-    <div class="formal">
-      <strong>OCR-friendly definition:</strong> Polymorphism allows different classes to implement methods with the <strong>same name</strong> but <strong>different behaviour</strong>.
-    </div>
-
-    <div class="question">
-      <span class="marks">[2]</span>
-      <p><strong>Mini-check:</strong> What makes something polymorphism?</p>
-      <div class="mcq">
-        <label><input type="radio" name="q4" value="a"> Making all attributes private.</label>
-        <label><input type="radio" name="q4" value="b"> Using the same method name with different behaviour in different classes.</label>
-        <label><input type="radio" name="q4" value="c"> Storing objects in an array.</label>
-      </div>
-      <button onclick="checkMCQ('q4','b','f4')">Check</button>
-      <div id="f4" class="feedback"></div>
-    </div>
-  </div>
-
-  <!-- 5: OCR question types + self-marking -->
-  <div class="section">
-    <h2>5) OCR Question Types (Paper-style) <span class="tag">Exam Practice + Self Mark</span></h2>
-
-    <div class="grid two">
-
-      <!-- (a) Array suitability -->
-      <div class="question">
-        <span class="marks">[3]</span>
-        <p><strong>(a) Explain why an array is suitable to represent the road.</strong><br/>
-        Context: road has 50 spaces (positions 0–49) and each space stores null or a Prize.</p>
-
-        <textarea placeholder="Write 3 bullet points or 3 short sentences."></textarea>
-
-        <div class="selfmark">
-          <h4>Mark it yourself <span class="pill">target: 3 marks</span></h4>
-          <label><input type="checkbox" name="sm_array" data-key="fixed"> I said the road has a <strong>fixed size</strong> (50 spaces).</label>
-          <label><input type="checkbox" name="sm_array" data-key="index"> I said positions map to <strong>array indices</strong> (0–49 / sequential).</label>
-          <label><input type="checkbox" name="sm_array" data-key="access"> I said arrays allow <strong>direct access</strong> to a position to check/store null or Prize.</label>
-
-          <button onclick="scoreChecklist('sm_array',3,'score_array','up_array',{
-            fixed:'Add: the number of road spaces is fixed (50), so fixed-size structure fits.',
-            index:'Add: position numbers map directly to array indices (0–49).',
-            access:'Add: direct/constant-time access makes checking/updating a space efficient.'
-          })">Score my answer</button>
-          <button class="secondary" onclick="clearChecklist('sm_array','score_array','up_array')">Reset</button>
-
-          <div class="scorebox" id="score_array"></div>
-          <div class="upgrade" id="up_array"></div>
-        </div>
-
-        <button class="secondary" onclick="toggle('mA')">Show model answer</button>
-        <div id="mA" class="model">
-          An array is suitable because the road has a <strong>fixed number</strong> of spaces (50).  
-          Each road space has a <strong>numbered position</strong> so the position can be used as the <strong>array index</strong> (0–49).  
-          This allows <strong>direct access</strong> to any space to check or store a prize/null efficiently.
-        </div>
-      </div>
-
-      <!-- (b)(ii) create/store object -->
-      <div class="question">
-        <span class="marks">[3]</span>
-        <p><strong>(b)(ii) Create and store a Prize object in an array.</strong><br/>
-        Example: index 3 has name “Box”, type “money”, value 25. Array is <code>allPrizes</code>.</p>
-
-        <div class="code">allPrizes[3] = new Prize("Box", "money", 25)</div>
-
-        <div class="selfmark">
-          <h4>Mark it yourself <span class="pill">target: 3 marks</span></h4>
-          <label><input type="checkbox" name="sm_store" data-key="index"> I used the correct <strong>index</strong> (3).</label>
-          <label><input type="checkbox" name="sm_store" data-key="new"> I created the object using <strong>new</strong> (constructor called).</label>
-          <label><input type="checkbox" name="sm_store" data-key="params"> I used the correct <strong>parameters</strong> in the correct order (name, type, value).</label>
-
-          <button onclick="scoreChecklist('sm_store',3,'score_store','up_store',{
-            index:'Add: store in index 3 specifically (allPrizes[3]).',
-            new:'Add: use the constructor call/new to create the object.',
-            params:'Add: include correct values: "Box", "money", 25 (and in the right order).'
-          })">Score my answer</button>
-          <button class="secondary" onclick="clearChecklist('sm_store','score_store','up_store')">Reset</button>
-
-          <div class="scorebox" id="score_store"></div>
-          <div class="upgrade" id="up_store"></div>
-        </div>
-
-        <button class="secondary" onclick="toggle('mB')">Show alternatives</button>
-        <div id="mB" class="model">
-          Acceptable pseudocode variants include:<br/>
-          <code>allPrizes[3] &larr; new Prize("Box","money",25)</code><br/>
-          or create then assign:<br/>
-          <code>p &larr; new Prize(...)</code> then <code>allPrizes[3] &larr; p</code>
-        </div>
-      </div>
-
-      <!-- Treasure constructor -->
-      <div class="question">
-        <span class="marks">[3]</span>
-        <p><strong>Declare class Treasure (attributes + constructor only).</strong><br/>
-        Attributes: <code>private value : integer</code>, <code>private level : string</code>. Constructor assigns parameters to attributes.</p>
-
-        <textarea placeholder="Write pseudocode for class Treasure with the constructor only."></textarea>
-
-        <div class="selfmark">
-          <h4>Mark it yourself <span class="pill">target: 3 marks</span></h4>
-          <label><input type="checkbox" name="sm_treasure" data-key="attr"> I declared both attributes with correct <strong>types</strong> (value:int, level:string).</label>
-          <label><input type="checkbox" name="sm_treasure" data-key="private"> I made attributes <strong>private</strong>.</label>
-          <label><input type="checkbox" name="sm_treasure" data-key="assign"> I used constructor parameters and <strong>assigned</strong> them to the attributes.</label>
-
-          <button onclick="scoreChecklist('sm_treasure',3,'score_treasure','up_treasure',{
-            attr:'Add: declare value as integer and level as string.',
-            private:'Add: specify attributes are private.',
-            assign:'Add: constructor takes v and l and assigns value=v, level=l.'
-          })">Score my answer</button>
-          <button class="secondary" onclick="clearChecklist('sm_treasure','score_treasure','up_treasure')">Reset</button>
-
-          <div class="scorebox" id="score_treasure"></div>
-          <div class="upgrade" id="up_treasure"></div>
-        </div>
-
-        <button class="secondary" onclick="toggle('mC')">Show model answer</button>
-        <div id="mC" class="model">
-<pre class="code">class Treasure
-    private value : integer
-    private level : string
-
-    public procedure new(v : integer, l : string)
-        value = v
-        level = l
-    endprocedure
-endclass</pre>
-        </div>
-      </div>
-
-      <!-- Getter method -->
-      <div class="question">
-        <span class="marks">[2]</span>
-        <p><strong>Write getLevel()</strong> (returns appropriate attribute).</p>
-
-        <textarea placeholder="Write getLevel() in pseudocode/program style."></textarea>
-
-        <div class="selfmark">
-          <h4>Mark it yourself <span class="pill">target: 2 marks</span></h4>
-          <label><input type="checkbox" name="sm_get" data-key="return"> I used <strong>return</strong> (not output/print).</label>
-          <label><input type="checkbox" name="sm_get" data-key="level"> I returned the correct attribute (<strong>level</strong>).</label>
-
-          <button onclick="scoreChecklist('sm_get',2,'score_get','up_get',{
-            return:'Add: use return, not output.',
-            level:'Add: return level (the attribute).'
-          })">Score my answer</button>
-          <button class="secondary" onclick="clearChecklist('sm_get','score_get','up_get')">Reset</button>
-
-          <div class="scorebox" id="score_get"></div>
-          <div class="upgrade" id="up_get"></div>
-        </div>
-
-        <button class="secondary" onclick="toggle('mD')">Show model answer</button>
-        <div id="mD" class="model">
-<pre class="code">public function getLevel() returns string
-    return level
-endfunction</pre>
-        </div>
-      </div>
-
-      <!-- updateValues -->
-      <div class="question">
-        <span class="marks">[4]</span>
-        <p><strong>Write updateValues(type, value)</strong><br/>
-        If type is “money” add to money. If “experience” add to experience. Otherwise no change.</p>
-
-        <textarea placeholder="Write pseudocode or program code (IF / ELSE IF)."></textarea>
-
-        <div class="selfmark">
-          <h4>Mark it yourself <span class="pill">target: 4 marks</span></h4>
-          <label><input type="checkbox" name="sm_update" data-key="moneycheck"> I checked if <strong>type = &quot;money&quot;</strong>.</label>
-          <label><input type="checkbox" name="sm_update" data-key="moneyadd"> I updated money using <strong>money = money + value</strong>.</label>
-          <label><input type="checkbox" name="sm_update" data-key="expcheck"> I checked if <strong>type = &quot;experience&quot;</strong> (else if).</label>
-          <label><input type="checkbox" name="sm_update" data-key="expadd"> I updated experience using <strong>experience = experience + value</strong>.</label>
-
-          <button onclick="scoreChecklist('sm_update',4,'score_update','up_update',{
-            moneycheck:'Add: IF type = "money" THEN ...',
-            moneyadd:'Add: money = money + value',
-            expcheck:'Add: ELSE IF type = "experience" THEN ...',
-            expadd:'Add: experience = experience + value'
-          })">Score my answer</button>
-          <button class="secondary" onclick="clearChecklist('sm_update','score_update','up_update')">Reset</button>
-
-          <div class="scorebox" id="score_update"></div>
-          <div class="upgrade" id="up_update"></div>
-        </div>
-
-        <button class="secondary" onclick="toggle('mE')">Show model answer</button>
-        <div id="mE" class="model">
-<pre class="code">public procedure updateValues(t : string, v : integer)
-    if t = "money" then
-        money = money + v
-    else if t = "experience" then
-        experience = experience + v
-    end if
-endprocedure</pre>
-        </div>
-      </div>
-
-      <!-- Random placement decisions -->
-      <div class="question">
-        <span class="marks">[3]</span>
-        <p><strong>Describe decisions in a random placement algorithm</strong><br/>
-        Each road space can only store one prize.</p>
-
-        <textarea placeholder="Write 3 short points. Mention selection + iteration."></textarea>
-
-        <div class="selfmark">
-          <h4>Mark it yourself <span class="pill">target: 3 marks</span></h4>
-          <label><input type="checkbox" name="sm_random" data-key="rand"> I said the algorithm generates a <strong>random position</strong>.</label>
-          <label><input type="checkbox" name="sm_random" data-key="checkempty"> I said it must <strong>check if the space is empty/null</strong>.</label>
-          <label><input type="checkbox" name="sm_random" data-key="repeat"> I said if not empty it must <strong>repeat/loop</strong> until it finds an empty space.</label>
-
-          <button onclick="scoreChecklist('sm_random',3,'score_random','up_random',{
-            rand:'Add: generate random position/index.',
-            checkempty:'Add: check road[position] is null/empty.',
-            repeat:'Add: if occupied, repeat (loop/retry) until empty found.'
-          })">Score my answer</button>
-          <button class="secondary" onclick="clearChecklist('sm_random','score_random','up_random')">Reset</button>
-
-          <div class="scorebox" id="score_random"></div>
-          <div class="upgrade" id="up_random"></div>
-        </div>
-
-        <button class="secondary" onclick="toggle('mF')">Show model answer</button>
-        <div id="mF" class="model">
-          The algorithm must decide whether a randomly generated position is <strong>empty</strong> (null) or already contains a prize.  
-          If empty, it stores the prize and moves on; if not, it must <strong>repeat</strong> (generate another random position) until an empty space is found.  
-          This uses <strong>selection</strong> (if/else) and <strong>iteration</strong> (loop).
-        </div>
-      </div>
-
-      <!-- Benefits of OOP -->
-      <div class="question">
-        <span class="marks">[2]</span>
-        <p><strong>Describe two benefits of using OOP rather than procedural</strong></p>
-
-        <textarea placeholder="Write 2 benefits. Each needs a short because…"></textarea>
-
-        <div class="selfmark">
-          <h4>Mark it yourself <span class="pill">target: 2 marks</span></h4>
-          <label><input type="checkbox" name="sm_benefits" data-key="reuse"> I gave a benefit about <strong>code reuse / reduced duplication</strong> (e.g., inheritance).</label>
-          <label><input type="checkbox" name="sm_benefits" data-key="maint"> I gave a benefit about <strong>maintainability / encapsulation</strong> (reduced unintended modification).</label>
-
-          <button onclick="scoreChecklist('sm_benefits',2,'score_benefits','up_benefits',{
-            reuse:'Add: code reuse / inheritance reduces duplicated code.',
-            maint:'Add: encapsulation improves maintainability by controlling access to data.'
-          })">Score my answer</button>
-          <button class="secondary" onclick="clearChecklist('sm_benefits','score_benefits','up_benefits')">Reset</button>
-
-          <div class="scorebox" id="score_benefits"></div>
-          <div class="upgrade" id="up_benefits"></div>
-        </div>
-
-        <button class="secondary" onclick="toggle('mH')">Show model answer</button>
-        <div id="mH" class="model">
-          <strong>Code reuse:</strong> classes can be reused and extended (e.g., via inheritance), reducing duplicated code.  
-          <strong>Maintainability:</strong> encapsulation keeps data private and accessed through methods, reducing unintended changes and making the program easier to modify.
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- 6: 1-minute plenary -->
-  <div class="section">
-    <h2>6) 1-Minute Plenary (Quick Retrieval) <span class="tag">Mini-Plenary</span></h2>
-    <div class="question">
-      <span class="marks">[4]</span>
-      <p><strong>Match the term to the clue:</strong></p>
-      <ol>
-        <li>“Blueprint”</li>
-        <li>“Locked backpack (private attributes)”</li>
-        <li>“DNA from a parent class”</li>
-        <li>“Same method name, different behaviour”</li>
-      </ol>
-      <p>Write: class / encapsulation / inheritance / polymorphism</p>
-      <textarea placeholder="1=..., 2=..., 3=..., 4=..."></textarea>
-      <button class="secondary" onclick="toggle('mR')">Show answers</button>
-      <div id="mR" class="model">
-        1 = class<br>
-        2 = encapsulation<br>
-        3 = inheritance<br>
-        4 = polymorphism
-      </div>
-    </div>
-  </div>
+
+<h1>Python OOP – Fully Commented Learning Lab</h1>
+<p>Each example includes comments explaining the purpose of every important line.</p>
+
+<!-- STEP 1 -->
+<div class="section">
+<h2>Step 1 – How to Code a Class</h2>
+
+<textarea id="code1">
+# Define a class called Card (this is the blueprint)
+class Card:
+
+    # __init__ is the constructor
+    # It runs automatically when we create an object
+    def __init__(self, rank, suit):
+
+        # Store the rank inside this object
+        self.rank = rank
+
+        # Store the suit inside this object
+        self.suit = suit
+
+
+# Create an object (instance) of Card
+card1 = Card("7", "Hearts")
+
+# Access the object's attribute
+print(card1.rank)
+</textarea>
+
+<button onclick="runCode('code1','out1')">Run</button>
+<div id="out1" class="output"></div>
+
+<p><strong>Concept shown:</strong> Class + Object creation.</p>
+</div>
+
+<!-- STEP 2 -->
+<div class="section">
+<h2>Step 2 – How to Code Encapsulation</h2>
+
+<textarea id="code2">
+# Define a class
+class Card:
+
+    def __init__(self, rank):
+
+        # Underscore means "internal use"
+        # This indicates the attribute should not be accessed directly
+        self._rank = rank
+
+    # @property allows controlled access
+    @property
+    def rank(self):
+
+        # Return the internal value safely
+        return self._rank
+
+
+# Create object
+card1 = Card("K")
+
+# Access rank using property method
+print(card1.rank)
+</textarea>
+
+<button onclick="runCode('code2','out2')">Run</button>
+<div id="out2" class="output"></div>
+
+<p><strong>Concept shown:</strong> Encapsulation (controlled access to data).</p>
+</div>
+
+<!-- STEP 3 -->
+<div class="section">
+<h2>Step 3 – How to Code Inheritance</h2>
+
+<textarea id="code3">
+# Parent class
+class Card:
+
+    def __init__(self, rank):
+        self.rank = rank
+
+
+# Child class inherits from Card
+class FaceCard(Card):
+
+    # New method added in subclass
+    def shout(self):
+
+        # Uses attribute inherited from parent
+        return f"{self.rank}!!!"
+
+
+# Create object of subclass
+card1 = FaceCard("Q")
+
+# Call subclass method
+print(card1.shout())
+</textarea>
+
+<button onclick="runCode('code3','out3')">Run</button>
+<div id="out3" class="output"></div>
+
+<p><strong>Concept shown:</strong> Inheritance (FaceCard reuses Card).</p>
+</div>
+
+<!-- STEP 4 -->
+<div class="section">
+<h2>Step 4 – How to Code Polymorphism</h2>
+
+<textarea id="code4">
+# Base class
+class Card:
+
+    # Method that will be overridden
+    def describe(self):
+        return "Normal card"
+
+
+# Subclass overrides method
+class Joker(Card):
+
+    # Same method name, different behaviour
+    def describe(self):
+        return "Joker card"
+
+
+# Store different object types in a list
+cards = [Card(), Joker()]
+
+# Same method call on different objects
+for c in cards:
+
+    # Each object responds differently
+    print(c.describe())
+</textarea>
+
+<button onclick="runCode('code4','out4')">Run</button>
+<div id="out4" class="output"></div>
+
+<p><strong>Concept shown:</strong> Polymorphism (same method, different result).</p>
+</div>
+
+<!-- FINAL SIDE BY SIDE -->
+<div class="section">
+<h2>Final – Full Deck Example (All Concepts Combined)</h2>
+
+<div class="split">
+
+<div>
+<h3>Your Code</h3>
+<textarea id="studentCode">
+# Write your full example here
+# Include:
+# - Class
+# - Encapsulation
+# - Inheritance
+# - Polymorphism
+
+</textarea>
+<button onclick="runCode('studentCode','studentOut')">Run Yours</button>
+<div id="studentOut" class="output"></div>
+</div>
+
+<div>
+<h3>Model Example (Fully Commented)</h3>
+<div class="model">
+# Base class (Blueprint)
+class Card:
+
+    # Constructor
+    def __init__(self, rank, suit):
+
+        # Encapsulation: internal attributes
+        self._rank = rank
+        self._suit = suit
+
+    # Property for controlled access
+    @property
+    def rank(self):
+        return self._rank
+
+    @property
+    def suit(self):
+        return self._suit
+
+    # Method shared by all cards
+    def describe(self):
+        return f"{self.rank} of {self.suit}"
+
+
+# Subclass (Inheritance)
+class FaceCard(Card):
+
+    # Override method (Polymorphism)
+    def describe(self):
+        return f"Face card: {self.rank} of {self.suit}"
+
+
+# Subclass with custom constructor
+class Joker(Card):
+
+    # Use parent constructor
+    def __init__(self):
+        super().__init__("J", "Joker")
+
+    # Override method
+    def describe(self):
+        return "Joker!"
+
+
+# Create mixed objects
+deck = [
+    Card("7", "Hearts"),
+    FaceCard("K", "Spades"),
+    Joker()
+]
+
+# Polymorphism in action
+for card in deck:
+    print(card.describe())
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+let pyodide;
+
+async function init(){
+  pyodide = await loadPyodide({indexURL:"https://cdn.jsdelivr.net/pyodide/v0.29.3/full/"});
+}
+init();
+
+async function runCode(codeId,outId){
+  const code = document.getElementById(codeId).value;
+  const out = document.getElementById(outId);
+  try{
+    const result = await pyodide.runPythonAsync(code);
+    out.textContent = result ?? "";
+  }catch(err){
+    out.textContent = err;
+  }
+}
+</script>
 
 </body>
 </html>
